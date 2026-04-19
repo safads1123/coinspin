@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CoinSpin Casino</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #0f1720;
+      --panel: #18222f;
+      --panel-2: #212d3b;
+      --panel-3: #121923;
+      --text: #eef4ff;
+      --muted: #95a6bb;
+      --green: #00e38a;
+      --green-dark: #00b86f;
+      --red: #ff5a76;
+      --yellow: #ffd54a;
+      --blue: #53b7ff;
+      --border: rgba(255,255,255,0.08);
+      --glow: 0 0 30px rgba(0,227,138,0.12);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #162330 0%, #0b1118 45%, #070b10 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    button, input, select { font: inherit; }
+    .hidden { display: none !important; }
+
+    .auth-shell {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .auth-card {
+      width: min(100%, 980px);
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.02));
+      box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+      backdrop-filter: blur(12px);
+    }
+
+    .auth-side {
+      padding: 34px;
+      background: radial-gradient(circle at top left, rgba(0,227,138,0.13), rgba(0,0,0,0) 45%), linear-gradient(180deg, #162230, #0f151d);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .auth-side h1 {
+      margin: 0 0 10px;
+      font-size: 2.2rem;
+      line-height: 1.05;
+    }
+
+    .auth-side p, .auth-bullet {
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .auth-bullets {
+      display: grid;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .auth-bullet {
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .auth-main { padding: 34px; }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      font-size: 1.1rem;
+      letter-spacing: 0.02em;
+    }
+
+    .brand-badge {
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--green), #00c6ff);
+      display: grid;
+      place-items: center;
+      color: #051017;
+      font-weight: 900;
+      box-shadow: var(--glow);
+    }
+
+    .auth-tabs {
+      display: flex;
+      gap: 10px;
+      margin: 28px 0 22px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 16px;
+      padding: 8px;
+    }
+
+    .auth-tab {
+      flex: 1;
+      border: 0;
+      border-radius: 12px;
+      padding: 12px;
+      background: transparent;
+      color: var(--text);
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .auth-tab.active {
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .form-block h2 { margin: 0 0 8px; font-size: 1.35rem; }
+    .form-sub { margin: 0 0 18px; color: var(--muted); }
+
+    label {
+      display: block;
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin: 14px 0 8px;
+    }
+
+    input[type="text"], input[type="password"], input[type="number"], select {
+      width: 100%;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 14px;
+      padding: 14px;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .auth-hint, .footer-note, .muted {
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .auth-hint {
+      margin-top: 14px;
+      font-size: 0.9rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 14px;
+      padding: 12px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      border-right: 1px solid var(--border);
+      background: rgba(8, 12, 18, 0.72);
+      backdrop-filter: blur(10px);
+      padding: 24px 18px;
+    }
+
+    .notice {
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 14px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.45;
+      margin-bottom: 20px;
+    }
+
+    .nav-title {
+      color: var(--muted);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin: 18px 0 10px;
+    }
+
+    .nav-item {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text);
+      text-align: left;
+      cursor: pointer;
+      font-size: 0.95rem;
+      margin-bottom: 8px;
+      transition: 0.18s ease;
+    }
+
+    .nav-item:hover, .nav-item.active,
+    .quick-btn:hover, .primary-btn:hover, .secondary-btn:hover, .auth-tab:hover {
+      transform: translateY(-1px);
+    }
+
+    .nav-item.active, .nav-item:hover {
+      background: rgba(255,255,255,0.05);
+      border-color: var(--border);
+    }
+
+    .main { padding: 26px; }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+    }
+
+    .title-wrap h1 { margin: 0; font-size: 1.8rem; }
+    .title-wrap p { margin: 6px 0 0; color: var(--muted); }
+
+    .balance {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 12px 16px;
+      box-shadow: var(--glow);
+    }
+
+    .coin {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      background: radial-gradient(circle at 30% 30%, #fff09f, var(--yellow));
+      color: #332600;
+    }
+
+    .grid { display: grid; grid-template-columns: 340px 1fr; gap: 22px; }
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.02));
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 20px;
+      box-shadow: 0 12px 36px rgba(0,0,0,0.22);
+    }
+
+    .controls h2, .game h2, .history-panel h2, .leaderboard-panel h2 {
+      margin-top: 0;
+      margin-bottom: 14px;
+      font-size: 1.1rem;
+    }
+
+    .row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+
+    .quick-btn, .primary-btn, .secondary-btn {
+      border: 0;
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.14s ease, opacity 0.14s ease, background 0.14s ease;
+    }
+
+    .quick-btn { background: var(--panel-2); color: var(--text); }
+    .primary-btn {
+      width: 100%;
+      margin-top: 16px;
+      background: linear-gradient(180deg, var(--green), var(--green-dark));
+      color: #03170e;
+      box-shadow: var(--glow);
+    }
+    .secondary-btn {
+      width: 100%;
+      margin-top: 10px;
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .top-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .mini-btn {
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .game-screen { display: none; }
+    .game-screen.active { display: block; }
+
+    .slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 10px; }
+    .reel {
+      min-height: 150px;
+      border-radius: 20px;
+      background: linear-gradient(180deg, #243141, #151e29);
+      border: 1px solid var(--border);
+      display: grid;
+      place-items: center;
+      font-size: 4rem;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+    }
+
+    .result {
+      margin-top: 18px;
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      min-height: 58px;
+      display: flex;
+      align-items: center;
+      color: var(--text);
+      font-weight: 600;
+      line-height: 1.45;
+    }
+
+    .paytable, .history { margin-top: 18px; display: grid; gap: 10px; }
+    .payrow, .history-item, .leaderboard-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 11px 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.04);
+      font-size: 0.94rem;
+    }
+    .payrow strong { color: var(--text); }
+    .win { color: var(--green); }
+    .loss { color: var(--red); }
+
+    .dice-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 12px; align-items: start; }
+    .dice-box {
+      min-height: 180px;
+      border-radius: 24px;
+      background: linear-gradient(180deg, #223040, #131a23);
+      border: 1px solid var(--border);
+      display: grid;
+      place-items: center;
+      font-size: 5rem;
+      font-weight: 900;
+    }
+    .dice-stat {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 10px;
+    }
+
+    .plinko-board {
+      position: relative;
+      height: 430px;
+      border-radius: 24px;
+      margin-top: 12px;
+      background: linear-gradient(180deg, #1a2430, #0f151d);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .peg {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.7);
+      box-shadow: 0 0 12px rgba(255,255,255,0.12);
+      transform: translate(-50%, -50%);
+    }
+    .plinko-ball {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #ffffff, var(--yellow));
+      box-shadow: 0 0 22px rgba(255,213,74,0.35);
+      left: 50%;
+      top: 18px;
+      transform: translateX(-50%);
+      transition: left 0.16s linear, top 0.16s linear;
+      z-index: 3;
+    }
+    .slots-row {
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      gap: 8px;
+      z-index: 2;
+    }
+    .mult-slot {
+      min-height: 56px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: #041218;
+      background: linear-gradient(180deg, #8ce8ff, #53b7ff);
+      font-size: 0.95rem;
+    }
+    .mult-slot.hot { background: linear-gradient(180deg, #ffe67c, #ffb84d); }
+    .mult-slot.cold { background: linear-gradient(180deg, #9fd79c, #54c081); }
+
+    .game-subgrid { display: grid; grid-template-columns: 1fr 280px; gap: 18px; align-items: start; }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.05);
+      color: var(--muted);
+      font-size: 0.88rem;
+      margin-bottom: 12px;
+    }
+
+    .leaderboard-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+
+    @media (max-width: 1100px) { .game-subgrid { grid-template-columns: 1fr; } }
+    @media (max-width: 980px) {
+      .auth-card, .layout, .grid { grid-template-columns: 1fr; }
+      .auth-side { border-right: 0; border-bottom: 1px solid var(--border); }
+      .sidebar { border-right: 0; border-bottom: 1px solid var(--border); }
+    }
+    @media (max-width: 700px) {
+      .dice-wrap { grid-template-columns: 1fr; }
+      .slots { gap: 10px; }
+      .reel { min-height: 110px; font-size: 3rem; }
+      .row { grid-template-columns: repeat(4, 1fr); }
+      .main, .auth-main, .auth-side { padding: 16px; }
+      .plinko-board { height: 380px; }
+      .slots-row { gap: 5px; }
+      .mult-slot { font-size: 0.8rem; min-height: 46px; }
+    }
+  </style>
+</head>
+<body>
+  <section id="authShell" class="auth-shell">
+    <div class="auth-card">
+      <div class="auth-side">
+        <div>
+          <div class="brand">
+            <div class="brand-badge">C</div>
+            <div>CoinSpin</div>
+          </div>
+          <div style="margin-top:28px;">
+            <h1>Fake-coin casino with account storage</h1>
+            <p>Log in or sign up to use the demo. Everything is stored locally in your browser only.</p>
+            <div class="auth-bullets">
+              <div class="auth-bullet">🎰 Slots, Plinko, and Dice share one saved balance.</div>
+              <div class="auth-bullet">🟡 Your account gets a permanent 5× luck boost.</div>
+              <div class="auth-bullet">🏆 Record holder tracks the highest balance ever reached.</div>
+            </div>
+          </div>
+        </div>
+        <div class="auth-hint">
+          Create your own account to play. Your progress is saved locally on your device.
+        </div>
+      </div>
+
+      <div class="auth-main">
+        <div class="auth-tabs">
+          <button id="loginTab" class="auth-tab active" type="button">Log In</button>
+          <button id="signupTab" class="auth-tab" type="button">Sign Up</button>
+        </div>
+
+        <div id="loginForm" class="form-block">
+          <h2>Welcome back</h2>
+          <p class="form-sub">Enter your username and password to continue.</p>
+          <label for="loginUsername">Username</label>
+          <input id="loginUsername" type="text" autocomplete="username" />
+          <label for="loginPassword">Password</label>
+          <input id="loginPassword" type="password" autocomplete="current-password" />
+          <button id="loginBtn" class="primary-btn" type="button">Log In</button>
+        </div>
+
+        <div id="signupForm" class="form-block hidden">
+          <h2>Create account</h2>
+          <p class="form-sub">Make a local demo account on this device.</p>
+          <label for="signupUsername">Username</label>
+          <input id="signupUsername" type="text" autocomplete="username" />
+          <label for="signupPassword">Password</label>
+          <input id="signupPassword" type="password" autocomplete="new-password" />
+          <button id="signupBtn" class="primary-btn" type="button">Create Account</button>
+        </div>
+
+        <div id="authMessage" class="result" style="margin-top:16px;">Log in or create an account to enter.</div>
+      </div>
+    </div>
+  </section>
+
+  <div id="appShell" class="layout hidden">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-badge">C</div>
+        <div>CoinSpin</div>
+      </div>
+
+      <div class="notice">
+        This is a demo game with <strong>fake in-game coins only</strong>. No deposits, no cashout, no real-money gambling.
+      </div>
+
+      <div class="nav-title">Games</div>
+      <button class="nav-item active" type="button" data-game="slots">🎰 Slots</button>
+      <button class="nav-item" type="button" data-game="plinko">🟡 Plinko</button>
+      <button class="nav-item" type="button" data-game="dice">🎲 Dice</button>
+
+      <div class="nav-title">Account</div>
+      <div class="footer-note">Logged in as <strong id="currentUserLabel">guest</strong></div>
+      <div class="footer-note">Luck boost: <strong id="luckLabel">Standard</strong></div>
+      <button id="logoutBtn" class="secondary-btn" type="button">Log Out</button>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <div class="title-wrap">
+          <h1 id="pageTitle">Neon Slots</h1>
+          <p id="pageSubtitle">Spin with virtual coins. Match symbols to win bonus coins.</p>
+        </div>
+        <div class="top-actions">
+          <div class="balance">
+            <div class="coin">◉</div>
+            <div>
+              <div style="font-size:0.82rem;color:var(--muted);">Balance</div>
+              <div id="balanceValue" style="font-weight:800;font-size:1.2rem;">1000</div>
+            </div>
+          </div>
+          <button id="resetBtn" class="mini-btn" type="button">Reset Balance</button>
+        </div>
+      </div>
+
+      <div class="grid">
+        <section class="card controls">
+          <h2>Place Bet</h2>
+          <label for="betInput">Bet amount</label>
+          <input id="betInput" type="number" min="1" max="1000" value="25" />
+
+          <label>Quick bet</label>
+          <div class="row">
+            <button class="quick-btn" data-bet="10">10</button>
+            <button class="quick-btn" data-bet="25">25</button>
+            <button class="quick-btn" data-bet="50">50</button>
+            <button class="quick-btn" data-bet="100">100</button>
+          </div>
+
+          <div id="diceControls" class="game-control hidden">
+            <label for="diceTarget">Roll under</label>
+            <input id="diceTarget" type="number" min="2" max="98" value="50" />
+          </div>
+
+          <div id="plinkoControls" class="game-control hidden">
+            <label for="plinkoRisk">Plinko risk</label>
+            <select id="plinkoRisk">
+              <option value="low">Low</option>
+              <option value="medium" selected>Medium</option>
+              <option value="high">High</option>
+            </select>
+          </div>
+
+          <button id="actionBtn" class="primary-btn" type="button">Spin</button>
+          <div id="paytable" class="paytable"></div>
+        </section>
+
+        <section class="card game">
+          <div id="slotsScreen" class="game-screen active">
+            <h2>Slot Reels</h2>
+            <div class="slots">
+              <div class="reel" id="reel1">🍀</div>
+              <div class="reel" id="reel2">💎</div>
+              <div class="reel" id="reel3">7️⃣</div>
+            </div>
+          </div>
+
+          <div id="plinkoScreen" class="game-screen">
+            <h2>Plinko Board</h2>
+            <div class="pill">Drop a ball through centered pegs. Each final slot has a payout multiplier.</div>
+            <div class="plinko-board" id="plinkoBoard">
+              <div class="plinko-ball" id="plinkoBall"></div>
+              <div class="slots-row" id="plinkoSlots"></div>
+            </div>
+          </div>
+
+          <div id="diceScreen" class="game-screen">
+            <h2>Dice Roll</h2>
+            <div class="game-subgrid">
+              <div>
+                <div class="pill">Choose a target from 2 to 98. Roll lower than the target to win.</div>
+                <div class="dice-wrap">
+                  <div class="dice-box" id="diceDisplay">42</div>
+                  <div>
+                    <div class="dice-stat"><strong>Target:</strong> <span id="diceTargetView">50</span></div>
+                    <div class="dice-stat"><strong>Win chance:</strong> <span id="diceChanceView">49%</span></div>
+                    <div class="dice-stat"><strong>Payout:</strong> <span id="dicePayoutView">1.96×</span></div>
+                  </div>
+                </div>
+              </div>
+              <div class="paytable" id="diceInfoPanel"></div>
+            </div>
+          </div>
+
+          <div id="resultBox" class="result">Place a bet and play.</div>
+        </section>
+      </div>
+
+      <div class="grid" style="margin-top:22px; grid-template-columns: 1fr 340px;">
+        <section class="card history-panel">
+          <h2>Recent Results</h2>
+          <div class="history" id="history"></div>
+        </section>
+        <section class="card leaderboard-panel">
+          <h2>Record Holder</h2>
+          <div class="leaderboard-grid" id="leaderboard"></div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const STORAGE_USERS = 'coinspin_users_v3';
+    const STORAGE_SESSION = 'coinspin_session_v3';
+    const STORAGE_RECORD = 'coinspin_record_v3';
+    const STORAGE_COINS_PREFIX = 'coinspin_coins_';
+    const DEFAULT_BALANCE = 1000;
+    const SPECIAL_USER = 'fallwoybaba';
+    const SPECIAL_PASS = 'imthegoat';
+    const symbols = ['🍀','💎','7️⃣','⭐','🍒','🔔'];
+    const PLINKO_MULTIPLIERS = {
+      low:    [0.5, 0.8, 1, 1.2, 1.5, 1.2, 1, 0.8, 0.5],
+      medium: [0.2, 0.6, 1, 1.6, 3, 1.6, 1, 0.6, 0.2],
+      high:   [0, 0.2, 0.8, 2, 7, 2, 0.8, 0.2, 0]
+    };
+    const GAME_META = {
+      slots: { title:'Neon Slots', subtitle:'Spin with virtual coins. Match symbols to win bonus coins.', action:'Spin' },
+      plinko:{ title:'Neon Plinko', subtitle:'Drop a glowing ball through pegs and land on a multiplier.', action:'Drop Ball' },
+      dice:  { title:'Neon Dice', subtitle:'Set a target and win if the roll lands under it.', action:'Roll Dice' }
+    };
+
+    const authShell = document.getElementById('authShell');
+    const appShell = document.getElementById('appShell');
+    const loginTab = document.getElementById('loginTab');
+    const signupTab = document.getElementById('signupTab');
+    const loginForm = document.getElementById('loginForm');
+    const signupForm = document.getElementById('signupForm');
+    const authMessage = document.getElementById('authMessage');
+    const loginUsername = document.getElementById('loginUsername');
+    const loginPassword = document.getElementById('loginPassword');
+    const signupUsername = document.getElementById('signupUsername');
+    const signupPassword = document.getElementById('signupPassword');
+    const loginBtn = document.getElementById('loginBtn');
+    const signupBtn = document.getElementById('signupBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const currentUserLabel = document.getElementById('currentUserLabel');
+    const luckLabel = document.getElementById('luckLabel');
+    const leaderboard = document.getElementById('leaderboard');
+
+    const balanceValue = document.getElementById('balanceValue');
+    const betInput = document.getElementById('betInput');
+    const actionBtn = document.getElementById('actionBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const resultBox = document.getElementById('resultBox');
+    const history = document.getElementById('history');
+    const paytable = document.getElementById('paytable');
+    const pageTitle = document.getElementById('pageTitle');
+    const pageSubtitle = document.getElementById('pageSubtitle');
+    const diceTarget = document.getElementById('diceTarget');
+    const diceTargetView = document.getElementById('diceTargetView');
+    const diceChanceView = document.getElementById('diceChanceView');
+    const dicePayoutView = document.getElementById('dicePayoutView');
+    const diceDisplay = document.getElementById('diceDisplay');
+    const diceInfoPanel = document.getElementById('diceInfoPanel');
+    const plinkoRisk = document.getElementById('plinkoRisk');
+    const plinkoBoard = document.getElementById('plinkoBoard');
+    const plinkoBall = document.getElementById('plinkoBall');
+    const plinkoSlots = document.getElementById('plinkoSlots');
+    const reels = [document.getElementById('reel1'), document.getElementById('reel2'), document.getElementById('reel3')];
+
+    let currentGame = 'slots';
+    let actionLocked = false;
+    let currentUser = null;
+    let users = loadUsers();
+
+    function seedSpecialUser() {
+      const existingCoins = Number(localStorage.getItem(`${STORAGE_COINS_PREFIX}${SPECIAL_USER}`));
+      if (!users[SPECIAL_USER]) {
+        users[SPECIAL_USER] = {
+          password: SPECIAL_PASS,
+          balance: Number.isFinite(existingCoins) && existingCoins >= 0 ? existingCoins : DEFAULT_BALANCE,
+          bestBalance: Number.isFinite(existingCoins) && existingCoins >= DEFAULT_BALANCE ? existingCoins : DEFAULT_BALANCE,
+          luckMultiplier: 5,
+          history: []
+        };
+      } else {
+        users[SPECIAL_USER].password = SPECIAL_PASS;
+        users[SPECIAL_USER].luckMultiplier = 5;
+        if (Number.isFinite(existingCoins) && existingCoins >= 0) {
+          users[SPECIAL_USER].balance = existingCoins;
+          users[SPECIAL_USER].bestBalance = Math.max(users[SPECIAL_USER].bestBalance || 0, existingCoins);
+        }
+      }
+      saveUsers();
+      ensureRecordFromUsers();
+    }
+
+    function loadUsers() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_USERS)) || {}; }
+      catch { return {}; }
+    }
+
+    function saveUsers() {
+      localStorage.setItem(STORAGE_USERS, JSON.stringify(users));
+    }
+
+    function saveCoins(username, amount) {
+      localStorage.setItem(`${STORAGE_COINS_PREFIX}${username}`, String(Math.max(0, Math.floor(amount))));
+    }
+
+    function loadCoins(username, fallback = DEFAULT_BALANCE) {
+      const raw = Number(localStorage.getItem(`${STORAGE_COINS_PREFIX}${username}`));
+      return Number.isFinite(raw) && raw >= 0 ? raw : fallback;
+    }
+
+    function getRecord() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_RECORD)) || { username: SPECIAL_USER, bestBalance: loadCoins(SPECIAL_USER, DEFAULT_BALANCE) };
+      } catch {
+        return { username: SPECIAL_USER, bestBalance: loadCoins(SPECIAL_USER, DEFAULT_BALANCE) };
+      }
+    }
+
+    function ensureRecordFromUsers() {
+      const entries = Object.entries(users).map(([username, data]) => ({
+        username,
+        bestBalance: Math.max(data.bestBalance || 0, loadCoins(username, data.balance || DEFAULT_BALANCE))
+      }));
+      if (!entries.length) return;
+      entries.sort((a, b) => b.bestBalance - a.bestBalance);
+      saveRecord(entries[0]);
+    }
+
+    function saveRecord(record) {
+      localStorage.setItem(STORAGE_RECORD, JSON.stringify(record));
+    }
+
+    function updateRecordHolder() {
+      if (!currentUser) return;
+      const record = getRecord();
+      if (currentUser.bestBalance > record.bestBalance) {
+        saveRecord({ username: currentUser.username, bestBalance: currentUser.bestBalance });
+      }
+      renderLeaderboard();
+    }
+
+    function renderLeaderboard() {
+      ensureRecordFromUsers();
+      const record = getRecord();
+      const top = Object.entries(users)
+        .map(([username, data]) => ({
+          username,
+          bestBalance: Math.max(data.bestBalance || 0, loadCoins(username, data.balance || DEFAULT_BALANCE))
+        }))
+        .sort((a, b) => b.bestBalance - a.bestBalance)
+        .slice(0, 5);
+
+      const rows = [
+        `<div class="leaderboard-item"><span>🏆 Record holder</span><strong>${record.username} · ${Math.floor(record.bestBalance)}</strong></div>`,
+        ...top.map((entry, index) => `<div class="leaderboard-item"><span>#${index + 1} ${entry.username}</span><strong>${Math.floor(entry.bestBalance)}</strong></div>`)
+      ];
+      leaderboard.innerHTML = rows.join('');
+    }
+
+    function setAuthMessage(message) { authMessage.textContent = message; }
+    function setResult(message) { resultBox.textContent = message; }
+    function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+    function rand(max) { return Math.floor(Math.random() * max); }
+    function randSymbol() { return symbols[rand(symbols.length)]; }
+
+    function switchAuth(mode) {
+      const isLogin = mode === 'login';
+      loginTab.classList.toggle('active', isLogin);
+      signupTab.classList.toggle('active', !isLogin);
+      loginForm.classList.toggle('hidden', !isLogin);
+      signupForm.classList.toggle('hidden', isLogin);
+      setAuthMessage(isLogin ? 'Log in or create an account to enter.' : 'Create an account on this device.');
+    }
+
+    function normalizeUsername(v) { return (v || '').trim(); }
+
+    function createAccount(username, password) {
+      if (!username || !password) return 'Enter both username and password.';
+      if (users[username]) return 'That username already exists.';
+      users[username] = { password, balance: DEFAULT_BALANCE, bestBalance: DEFAULT_BALANCE, luckMultiplier: 1, history: [] };
+      saveCoins(username, DEFAULT_BALANCE);
+      saveUsers();
+      ensureRecordFromUsers();
+      return null;
+    }
+
+    function login(username, password) {
+      const account = users[username];
+      if (!account || account.password !== password) return false;
+      const storedCoins = loadCoins(username, account.balance || DEFAULT_BALANCE);
+      currentUser = {
+        username,
+        ...account,
+        balance: storedCoins,
+        bestBalance: Math.max(account.bestBalance || 0, storedCoins)
+      };
+      localStorage.setItem(STORAGE_SESSION, username);
+      hydrateApp();
+      return true;
+    }
+
+    function persistCurrentUser() {
+      if (!currentUser) return;
+      saveCoins(currentUser.username, currentUser.balance);
+      users[currentUser.username] = {
+        password: currentUser.password,
+        balance: currentUser.balance,
+        bestBalance: currentUser.bestBalance,
+        luckMultiplier: currentUser.luckMultiplier,
+        history: currentUser.history || []
+      };
+      saveUsers();
+      updateRecordHolder();
+    }
+
+    function logout() {
+      localStorage.removeItem(STORAGE_SESSION);
+      currentUser = null;
+      authShell.classList.remove('hidden');
+      appShell.classList.add('hidden');
+      setAuthMessage('Logged out.');
+    }
+
+    function hydrateApp() {
+      currentUserLabel.textContent = currentUser.username;
+      luckLabel.textContent = currentUser.luckMultiplier > 1 ? `${currentUser.luckMultiplier}× boosted` : 'Standard';
+      renderBalance();
+      history.innerHTML = '';
+      (currentUser.history || []).slice().reverse().forEach(entry => {
+        addHistory(entry.label, entry.amount, false);
+      });
+      authShell.classList.add('hidden');
+      appShell.classList.remove('hidden');
+      renderLeaderboard();
+      switchGame(currentGame);
+      resetPlinkoVisuals();
+      setResult(`Welcome, ${currentUser.username}.`);
+      renderPlinkoPegs();
+      renderPlinkoSlots();
+    }
+
+    function renderBalance() {
+      balanceValue.textContent = Math.max(0, Math.floor(currentUser?.balance ?? DEFAULT_BALANCE));
+    }
+
+    function addHistory(text, amount, persist = true) {
+      const item = document.createElement('div');
+      item.className = 'history-item';
+      const cls = amount >= 0 ? 'win' : 'loss';
+      item.innerHTML = `<span>${text}</span><strong class="${cls}">${amount >= 0 ? '+' : ''}${Number(amount.toFixed(2))}</strong>`;
+      history.prepend(item);
+      while (history.children.length > 8) history.removeChild(history.lastChild);
+      if (persist && currentUser) {
+        currentUser.history = currentUser.history || [];
+        currentUser.history.push({ label: text, amount });
+        currentUser.history = currentUser.history.slice(-20);
+        persistCurrentUser();
+      }
+    }
+
+    function getBet() {
+      const bet = Number(betInput.value);
+      if (!Number.isFinite(bet) || bet <= 0) { setResult('Enter a valid bet greater than 0.'); return null; }
+      if (bet > currentUser.balance) { setResult('Not enough fake coins for that bet.'); return null; }
+      return bet;
+    }
+
+    function applyBet(bet) {
+      currentUser.balance -= bet;
+      renderBalance();
+      persistCurrentUser();
+    }
+
+    function payout(amount) {
+      currentUser.balance += amount;
+      currentUser.bestBalance = Math.max(currentUser.bestBalance || 0, currentUser.balance);
+      renderBalance();
+      persistCurrentUser();
+    }
+
+    function getLuckFactor() {
+      return currentUser?.luckMultiplier || 1;
+    }
+
+    function weightedRandomSymbol() {
+      const luck = getLuckFactor();
+      if (luck > 1 && Math.random() < 0.5) return '7️⃣';
+      return randSymbol();
+    }
+
+    async function animateSpin(finalSymbols) {
+      for (let i = 0; i < 12; i++) {
+        reels.forEach(reel => reel.textContent = randSymbol());
+        await sleep(70 + i * 8);
+      }
+      for (let i = 0; i < reels.length; i++) {
+        reels[i].textContent = finalSymbols[i];
+        await sleep(120);
+      }
+    }
+
+    function rollLuckySlotSymbols() {
+      const luck = getLuckFactor();
+      if (luck >= 5 && Math.random() < 0.55) {
+        const s = weightedRandomSymbol();
+        return [s, s, Math.random() < 0.7 ? s : weightedRandomSymbol()];
+      }
+      return [weightedRandomSymbol(), weightedRandomSymbol(), weightedRandomSymbol()];
+    }
+
+    function evaluateSlots(finalSymbols, bet) {
+      const counts = {};
+      finalSymbols.forEach(s => counts[s] = (counts[s] || 0) + 1);
+      const matches = Math.max(...Object.values(counts));
+      if (matches === 3) {
+        const winnings = bet * 5;
+        payout(winnings);
+        setResult(`Jackpot! ${finalSymbols.join(' ')} — You won ${winnings} coins.`);
+        addHistory(`Slots · ${finalSymbols.join(' ')} · 3 match`, winnings - bet);
+      } else if (matches === 2) {
+        const winnings = bet * 2;
+        payout(winnings);
+        setResult(`Nice hit! ${finalSymbols.join(' ')} — You won ${winnings} coins.`);
+        addHistory(`Slots · ${finalSymbols.join(' ')} · 2 match`, winnings - bet);
+      } else {
+        setResult(`No match. ${finalSymbols.join(' ')} — You lost ${bet} coins.`);
+        addHistory(`Slots · ${finalSymbols.join(' ')} · no match`, -bet);
+      }
+    }
+
+    async function playSlots() {
+      const bet = getBet(); if (bet == null) return;
+      applyBet(bet);
+      setResult('Spinning...');
+      const finalSymbols = rollLuckySlotSymbols();
+      await animateSpin(finalSymbols);
+      evaluateSlots(finalSymbols, bet);
+    }
+
+    function updateDiceStats() {
+      let target = Number(diceTarget.value);
+      if (!Number.isFinite(target)) target = 50;
+      target = Math.max(2, Math.min(98, Math.floor(target)));
+      diceTarget.value = target;
+      const chance = target - 1;
+      const payoutMult = 98 / chance;
+      diceTargetView.textContent = target;
+      diceChanceView.textContent = `${chance}%`;
+      dicePayoutView.textContent = `${payoutMult.toFixed(2)}×`;
+      diceInfoPanel.innerHTML = `
+        <div class="payrow"><span>Win condition</span><strong>Roll 1-${target - 1}</strong></div>
+        <div class="payrow"><span>Lose condition</span><strong>Roll ${target}-100</strong></div>
+        <div class="payrow"><span>Win chance</span><strong>${chance}%</strong></div>
+        <div class="payrow"><span>Payout</span><strong>${payoutMult.toFixed(2)}× bet</strong></div>
+      `;
+      return { target, chance, payoutMult };
+    }
+
+    function luckyDiceRoll(target) {
+      const luck = getLuckFactor();
+      if (luck >= 5 && Math.random() < 0.7) return Math.max(1, Math.min(target - 1, 1 + rand(Math.max(1, target - 1))));
+      return 1 + rand(100);
+    }
+
+    async function playDice() {
+      const bet = getBet(); if (bet == null) return;
+      const { target, payoutMult } = updateDiceStats();
+      applyBet(bet);
+      setResult('Rolling...');
+      for (let i = 0; i < 12; i++) {
+        diceDisplay.textContent = 1 + rand(100);
+        await sleep(70 + i * 10);
+      }
+      const roll = luckyDiceRoll(target);
+      diceDisplay.textContent = roll;
+      if (roll < target) {
+        const winnings = bet * payoutMult;
+        payout(winnings);
+        setResult(`You rolled ${roll} under ${target} and won ${winnings.toFixed(2)} coins.`);
+        addHistory(`Dice · roll ${roll} under ${target}`, winnings - bet);
+      } else {
+        setResult(`You rolled ${roll}. Needed under ${target}, so you lost ${bet} coins.`);
+        addHistory(`Dice · roll ${roll} vs target ${target}`, -bet);
+      }
+    }
+
+    function renderPlinkoSlots() {
+      const multipliers = PLINKO_MULTIPLIERS[plinkoRisk.value];
+      plinkoSlots.innerHTML = multipliers.map(mult => {
+        const cls = mult >= 2 ? 'mult-slot hot' : mult <= 0.5 ? 'mult-slot cold' : 'mult-slot';
+        return `<div class="${cls}">${mult}×</div>`;
+      }).join('');
+      paytable.innerHTML = multipliers.map((mult, i) => `<div class="payrow"><span>Slot ${i + 1}</span><strong>${mult}× bet</strong></div>`).join('');
+    }
+
+    function resetPlinkoVisuals() {
+      const { centerX, ballStartTop } = getPlinkoGeometry();
+      plinkoBall.style.transform = 'translate(-50%, -50%)';
+      plinkoBall.style.left = `${centerX}px`;
+      plinkoBall.style.top = `${ballStartTop}px`;
+    }
+
+    function getPlinkoGeometry() {
+      const boardWidth = plinkoBoard.clientWidth;
+      const sidePadding = 44;
+      const slotCount = 9;
+      const centerX = boardWidth / 2;
+      const laneStep = (boardWidth - sidePadding * 2) / (slotCount - 1);
+      const pegTop = 84;
+      const rowGap = 32;
+      const ballStartTop = 18;
+      const slotY = plinkoBoard.clientHeight - 42;
+      return { boardWidth, sidePadding, slotCount, centerX, laneStep, pegTop, rowGap, ballStartTop, slotY };
+    }
+
+    function renderPlinkoPegs() {
+      plinkoBoard.querySelectorAll('.peg').forEach(peg => peg.remove());
+      const rows = 8;
+      const { centerX, laneStep, pegTop, rowGap } = getPlinkoGeometry();
+
+      for (let row = 0; row < rows; row++) {
+        const cols = row + 1;
+        const startX = centerX - (row * laneStep) / 2;
+        const y = pegTop + row * rowGap;
+        for (let col = 0; col < cols; col++) {
+          const peg = document.createElement('div');
+          peg.className = 'peg';
+          peg.style.left = `${startX + col * laneStep}px`;
+          peg.style.top = `${y}px`;
+          plinkoBoard.appendChild(peg);
+        }
+      }
+    }
+
+    function luckyPlinkoPath() {
+      const luck = getLuckFactor();
+      if (luck >= 5 && Math.random() < 0.7) {
+        const favored = [4, 3, 5][rand(3)];
+        let rights = favored;
+        const path = [];
+        for (let i = 0; i < 8; i++) {
+          const needRight = rights > 0 && (8 - i === rights || Math.random() < rights / (8 - i));
+          path.push(needRight ? 1 : 0);
+          if (needRight) rights--;
+        }
+        return path;
+      }
+      return Array.from({ length: 8 }, () => Math.random() < 0.5 ? 0 : 1);
+    }
+
+    async function animatePlinko(pathIndex) {
+      const rows = 8;
+      const { centerX, laneStep, pegTop, rowGap, ballStartTop, sidePadding, slotY } = getPlinkoGeometry();
+      let offset = 0;
+
+      plinkoBall.style.transform = 'translate(-50%, -50%)';
+      plinkoBall.style.left = `${centerX}px`;
+      plinkoBall.style.top = `${ballStartTop}px`;
+
+      for (let row = 0; row < rows; row++) {
+        await sleep(150);
+        offset += pathIndex[row] === 0 ? -laneStep / 2 : laneStep / 2;
+        plinkoBall.style.left = `${centerX + offset}px`;
+        plinkoBall.style.top = `${pegTop + row * rowGap}px`;
+      }
+
+      await sleep(180);
+      const finalSlot = pathIndex.reduce((sum, dir) => sum + dir, 0);
+      const finalX = sidePadding + finalSlot * laneStep;
+      plinkoBall.style.left = `${finalX}px`;
+      plinkoBall.style.top = `${slotY}px`;
+      return finalSlot;
+    }
+
+    async function playPlinko() {
+      const bet = getBet(); if (bet == null) return;
+      const multipliers = PLINKO_MULTIPLIERS[plinkoRisk.value];
+      applyBet(bet);
+      setResult('Dropping ball...');
+      const path = luckyPlinkoPath();
+      const slotIndex = await animatePlinko(path);
+      const multiplier = multipliers[slotIndex];
+      const winnings = bet * multiplier;
+      if (winnings > 0) payout(winnings); else persistCurrentUser();
+      const net = winnings - bet;
+      setResult(`Ball landed in slot ${slotIndex + 1} at ${multiplier}×. ${winnings > 0 ? `You won ${winnings.toFixed(2)} coins.` : `You lost ${bet} coins.`}`);
+      addHistory(`Plinko · slot ${slotIndex + 1} · ${multiplier}×`, net);
+    }
+
+    function renderSlotsPaytable() {
+      paytable.innerHTML = `
+        <div class="payrow"><span>3 matching symbols</span><strong>5× bet</strong></div>
+        <div class="payrow"><span>2 matching symbols</span><strong>2× bet</strong></div>
+        <div class="payrow"><span>No match</span><strong>Lose bet</strong></div>
+      `;
+    }
+
+    function switchGame(game) {
+      currentGame = game;
+      document.querySelectorAll('.nav-item').forEach(btn => btn.classList.toggle('active', btn.dataset.game === game));
+      document.querySelectorAll('.game-screen').forEach(screen => screen.classList.toggle('active', screen.id === `${game}Screen`));
+      document.querySelectorAll('.game-control').forEach(el => el.classList.add('hidden'));
+      if (game === 'dice') document.getElementById('diceControls').classList.remove('hidden');
+      if (game === 'plinko') document.getElementById('plinkoControls').classList.remove('hidden');
+      pageTitle.textContent = GAME_META[game].title;
+      pageSubtitle.textContent = GAME_META[game].subtitle;
+      actionBtn.textContent = GAME_META[game].action;
+      if (game === 'slots') renderSlotsPaytable();
+      if (game === 'plinko') {
+        renderPlinkoSlots();
+        renderPlinkoPegs();
+        resetPlinkoVisuals();
+      }
+      if (game === 'dice') updateDiceStats();
+      setResult(`Loaded ${GAME_META[game].title}.`);
+    }
+
+    async function handleAction() {
+      if (actionLocked || !currentUser) return;
+      actionLocked = true;
+      actionBtn.disabled = true;
+      try {
+        if (currentGame === 'slots') await playSlots();
+        if (currentGame === 'plinko') await playPlinko();
+        if (currentGame === 'dice') await playDice();
+        currentUser.bestBalance = Math.max(currentUser.bestBalance || 0, currentUser.balance);
+        persistCurrentUser();
+        if (currentUser.balance <= 0) setResult('You ran out of demo coins. Reset balance to play again.');
+      } finally {
+        actionLocked = false;
+        actionBtn.disabled = false;
+      }
+    }
+
+    loginTab.addEventListener('click', () => switchAuth('login'));
+    signupTab.addEventListener('click', () => switchAuth('signup'));
+    loginBtn.addEventListener('click', () => {
+      const username = normalizeUsername(loginUsername.value);
+      const password = loginPassword.value;
+      if (!username || !password) return setAuthMessage('Enter both username and password.');
+      if (!login(username, password)) return setAuthMessage('Invalid username or password.');
+    });
+    signupBtn.addEventListener('click', () => {
+      const username = normalizeUsername(signupUsername.value);
+      const password = signupPassword.value;
+      const error = createAccount(username, password);
+      if (error) return setAuthMessage(error);
+      setAuthMessage('Account created. You can log in now.');
+      switchAuth('login');
+      loginUsername.value = username;
+      loginPassword.value = password;
+    });
+    logoutBtn.addEventListener('click', logout);
+
+    document.querySelectorAll('.quick-btn').forEach(btn => btn.addEventListener('click', () => { betInput.value = btn.dataset.bet; }));
+    document.querySelectorAll('.nav-item').forEach(btn => btn.addEventListener('click', () => switchGame(btn.dataset.game)));
+    diceTarget.addEventListener('input', updateDiceStats);
+    plinkoRisk.addEventListener('change', renderPlinkoSlots);
+    actionBtn.addEventListener('click', handleAction);
+    resetBtn.addEventListener('click', () => {
+      if (!currentUser) return;
+      currentUser.balance = DEFAULT_BALANCE;
+      currentUser.bestBalance = Math.max(currentUser.bestBalance || 0, DEFAULT_BALANCE);
+      currentUser.history = [];
+      reels[0].textContent = '🍀'; reels[1].textContent = '💎'; reels[2].textContent = '7️⃣';
+      diceDisplay.textContent = '42';
+      resetPlinkoVisuals();
+      history.innerHTML = '';
+      persistCurrentUser();
+      renderBalance();
+      renderLeaderboard();
+      setResult('Balance reset to 1000 fake coins.');
+    });
+
+    window.addEventListener('resize', () => {
+      renderPlinkoPegs();
+      renderPlinkoSlots();
+      resetPlinkoVisuals();
+    });
+
+    seedSpecialUser();
+    renderSlotsPaytable();
+    renderPlinkoSlots();
+    updateDiceStats();
+    renderPlinkoPegs();
+    renderLeaderboard();
+    switchGame('slots');
+    setTimeout(() => {
+      renderPlinkoPegs();
+      renderLeaderboard();
+    }, 0);
+
+    const remembered = localStorage.getItem(STORAGE_SESSION);
+    if (remembered && users[remembered]) {
+      login(remembered, users[remembered].password);
+    }
+  </script>
+</body>
+</html>
